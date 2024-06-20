@@ -1,33 +1,30 @@
 
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css'
 import { useState } from 'react'
+import { AppDispatch, RootState } from './store';
 
-interface Todo {
-  text: string;
-  completed: boolean;
-}
+
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([])
   const [newTodo, setNewTodo] = useState<string>('')
+
+  const  todos = useSelector((state:RootState) => state.todos.todos)
+  const dispatch = useDispatch<AppDispatch>()
 
   function addTodo() {
     if (newTodo) {
-      setTodos([...todos, { text: newTodo, completed: false }])
+      dispatch(addTodo(newTodo))
       setNewTodo('')
     }
   }
 
   function toggleTodo(index: number) {
-    const updatedTodos = todos.map((todo, i) =>
-      i === index ? { ...todo, completed: !todo.completed } : todo
-    )
-    setTodos(updatedTodos)
+    dispatch(toggleTodo(index))
   }
 
   function deleteTodo(index: number) {
-    const updateTodos = todos.filter((_, i) => i !== index);
-    setTodos(updateTodos)
+    dispatch(deleteTodo(index))
   }
 
   return (
